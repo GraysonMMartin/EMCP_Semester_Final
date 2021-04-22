@@ -54,7 +54,7 @@ class LogicGate {
 
 class InputGate extends LogicGate {
 
-  InputGate(float positionX, float positionY, ControlP5 control) {
+  InputGate(float positionX, float positionY) {
     super(positionX, positionY, 0);
     outputNode = new OutputNode(positionX + 50, positionY);
   }
