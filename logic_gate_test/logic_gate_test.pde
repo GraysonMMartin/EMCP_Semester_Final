@@ -1,8 +1,8 @@
 import processing.pdf.*;
 import controlP5.*;
 
-OutputNode testNode;
-InputNode testNodeTwo;
+OutputNode activeOutput = null;
+InputNode activeInput = null;
 ControlP5 cp5;
 ScrollableList dropdownList;
 Button addGateBtn, pdfBtn;
@@ -17,8 +17,6 @@ void setup() {
   size(1200,850);
   background(255);
   cp5 = new ControlP5(this);
-  testNode = new OutputNode(66, 66);
-  testNodeTwo = new InputNode(100, 500, 0);
   inputGates.add(new InputGate(75,height/2));
   outputGates.add(new OutputGate(width-340,height/2));
   setupControls();
@@ -37,7 +35,35 @@ void draw() {
 }
 
 void mouseReleased() {
-  //testNode.connect(testNodeTwo);
+  for(InputGate inputGate : inputGates){
+    inputGate.switchState();
+    if(inputGate.outputNode.isClicked()){
+      activeOutput = inputGate.outputNode;
+    }
+  }
+  for(OutputGate outputGate : outputGates){
+    for(InputNode inputNode: outputGate.inputNodes){
+      if(inputNode.isClicked()){
+        activeInput = inputNode;
+      }
+    }
+  }
+  for(AndGate andGate : andGates){
+    for(InputNode inputNode: andGate.inputNodes){
+      inputNode.isClicked();
+    }
+    if(andGate.outputNode.isClicked()){
+      activeOutput = andGate.outputNode;
+    }
+  }
+  for(OrGate orGate : orGates){
+    for(InputNode inputNode: orGate.inputNodes){
+      inputNode.isClicked();
+    }
+    if(orGate.outputNode.isClicked()){
+      activeOutput = orGate.outputNode;
+    }
+  }
 }
 
 void controlEvent(ControlEvent theControlEvent){
@@ -72,6 +98,7 @@ void update() {
     checkGatesPressed();
   }
   for (InputGate inputGate : inputGates) {
+    inputGate.update();
     inputGate.display();
   }
   for (AndGate andGate : andGates) {
@@ -82,6 +109,9 @@ void update() {
   }
   for (OutputGate outputGate : outputGates) {
     outputGate.display();
+  }
+  if(activeInput != null && activeOutput != null){
+    activeOutput.connect(activeInput);
   }
 }
 

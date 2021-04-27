@@ -3,6 +3,7 @@ class Node {
   float positionX, positionY;
   float nodeRadius = 5;
   boolean state = false;
+  boolean isSelected = false;
 
   Node(float positionX, float positionY) {
     this.positionX = positionX;
@@ -32,8 +33,10 @@ class Node {
 
   boolean isClicked() {
     if (dist(mouseX, mouseY, positionX, positionY) < nodeRadius) {
+      isSelected = !isSelected;
       return true;
     } else {
+      isSelected = false;
       return false;
     }
   }
@@ -48,15 +51,19 @@ class InputNode extends Node {
   }
 
   void display() {
-    fill(0);
+    if (isSelected) {
+      fill(255, 0, 0);
+    } else {
+      fill(0);
+    }
     ellipse(positionX, positionY, 2*nodeRadius, 2*nodeRadius);
   }
 
   float getOffsetY() {
     return 50-offsetY;
   }
-  
-  String getInfo(){
+
+  String getInfo() {
     return "Input Node at ("+positionX+", "+positionY+").";
   }
 }
@@ -72,20 +79,25 @@ class OutputNode extends Node {
   void connect(InputNode inputNode) {
     connectedInput = inputNode;
     println("connecting");
-    line(positionX,positionY,connectedInput.getPositionX(),connectedInput.getPositionY());
-    connectedInput.setState(state);
+    line(positionX, positionY, connectedInput.getPositionX(), connectedInput.getPositionY());
+    connectedInput.setState(getState());
+    isSelected = false;
   }
-  
-  void disconnect(){
+
+  void disconnect() {
     connectedInput.setState(false);
     connectedInput = null;
   }
 
   void display() {
-    fill(0);
+    if (isSelected) {
+      fill(255, 0, 0);
+    } else {
+      fill(0);
+    }
     ellipse(positionX, positionY, 2*nodeRadius, 2*nodeRadius);
     if (connectedInput != null) {
-      println("connected to",connectedInput.getInfo());
+      println(connectedInput.getState());
       line(positionX, positionY, connectedInput.getPositionX(), connectedInput.getPositionY());
     }
   }

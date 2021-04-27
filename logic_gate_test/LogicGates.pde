@@ -23,11 +23,13 @@ class LogicGate {
   }
 
   void move(float positionX, float positionY) {
-    posX = positionX;
-    posY = positionY;
-    outputNode.move(positionX+50, positionY);
     for (InputNode inputNode : inputNodes) {
-      inputNode.move(positionX-50, positionY+inputNode.getOffsetY());
+      if (!inputNode.isClicked() && !outputNode.isClicked()) {
+        inputNode.move(positionX-50, positionY+inputNode.getOffsetY());
+        posX = positionX;
+        posY = positionY;
+        outputNode.move(positionX+50, positionY);
+      }
     }
   }
 
@@ -53,17 +55,47 @@ class LogicGate {
 }
 
 class InputGate extends LogicGate {
+  boolean buttonPressed = false;
 
   InputGate(float positionX, float positionY) {
     super(positionX, positionY, 0);
     outputNode = new OutputNode(positionX + 50, positionY);
   }
 
+  void move(float positionX, float positionY) {
+    if (!outputNode.isClicked() && !buttonPressed) {
+      posX = positionX;
+      posY = positionY;
+      outputNode.move(positionX+50, positionY);
+    }
+  }
+
+  void switchState() {
+    if (buttonPressed) {
+      setOutputState(!getOutputState());
+    }
+  }
+
+  void update() {
+    setBackground(getOutputState());
+    if (mouseX < posX+25 && mouseX > posX - 25 && mouseY < posY + 40 && mouseY > posY + 20) {
+      buttonPressed = true;
+    } else {
+      buttonPressed = false;
+    }
+  }
+
   void display() {
-    setBackground(outputState);
+    setBackground(getOutputState());
     fill(backgroundColor);
     strokeWeight(3);
     rect(posX-50, posY-50, 100, 100);
+    if (getOutputState()) {
+      fill(0, 255, 0);
+    } else {
+      fill(255, 0, 0);
+    }
+    rect(posX-25, posY+20, 50, 20);
     fill(0);
     textAlign(CENTER);
     text("INPUT", posX, posY);
@@ -78,6 +110,7 @@ class OutputGate extends LogicGate {
   }
 
   void display() {
+    setBackground(inputNodes.get(0).getState());
     fill(backgroundColor);
     strokeWeight(3);
     rect(posX-50, posY-50, 100, 100);
