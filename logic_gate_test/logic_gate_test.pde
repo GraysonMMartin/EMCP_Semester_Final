@@ -10,6 +10,8 @@ ArrayList<InputGate> inputGates = new ArrayList<InputGate>();
 ArrayList<AndGate> andGates = new ArrayList<AndGate>();
 ArrayList<OrGate> orGates = new ArrayList<OrGate>();
 ArrayList<OutputGate> outputGates = new ArrayList<OutputGate>();
+ArrayList<NotGate> notGates = new ArrayList<NotGate>();
+ArrayList<ExclusiveOrGate> exclusiveOrGates = new ArrayList<ExclusiveOrGate>();
 float currentDropdownSelection;
 boolean record;
 
@@ -50,7 +52,9 @@ void mouseReleased() {
   }
   for(AndGate andGate : andGates){
     for(InputNode inputNode: andGate.inputNodes){
-      inputNode.isClicked();
+      if(inputNode.isClicked()){
+        activeInput = inputNode;
+      }
     }
     if(andGate.outputNode.isClicked()){
       activeOutput = andGate.outputNode;
@@ -58,10 +62,32 @@ void mouseReleased() {
   }
   for(OrGate orGate : orGates){
     for(InputNode inputNode: orGate.inputNodes){
-      inputNode.isClicked();
+      if(inputNode.isClicked()){
+        activeInput = inputNode;
+      }
     }
     if(orGate.outputNode.isClicked()){
       activeOutput = orGate.outputNode;
+    }
+  }
+  for(ExclusiveOrGate xorGate : exclusiveOrGates){
+    for(InputNode inputNode: xorGate.inputNodes){
+      if(inputNode.isClicked()){
+        activeInput = inputNode;
+      }
+    }
+    if(xorGate.outputNode.isClicked()){
+      activeOutput = xorGate.outputNode;
+    }
+  }
+  for(NotGate notGate : notGates){
+    for(InputNode inputNode : notGate.inputNodes){
+      if(inputNode.isClicked()){
+        activeInput = inputNode;
+      }
+    }
+    if(notGate.outputNode.isClicked()){
+      activeOutput = notGate.outputNode;
     }
   }
 }
@@ -92,6 +118,12 @@ void addGate(float dropdownSelection){
   if(dropdownSelection == 3){
     orGates.add(new OrGate(100,100));
   }
+  if(dropdownSelection == 4){
+    notGates.add(new NotGate(100,100));
+  }
+  if(dropdownSelection == 5){
+    exclusiveOrGates.add(new ExclusiveOrGate(100,100));
+  }
 }
 void update() {
   if (mousePressed) {
@@ -102,16 +134,28 @@ void update() {
     inputGate.display();
   }
   for (AndGate andGate : andGates) {
+    andGate.updateOutputState();
     andGate.display();
   }
   for (OrGate orGate : orGates) {
+    orGate.updateOutputState();
     orGate.display();
+  }
+  for (ExclusiveOrGate xorGate : exclusiveOrGates) {
+    xorGate.updateOutputState();
+    xorGate.display();
+  }
+  for (NotGate notGate : notGates){
+    notGate.updateOutputState();
+    notGate.display();
   }
   for (OutputGate outputGate : outputGates) {
     outputGate.display();
   }
   if(activeInput != null && activeOutput != null){
     activeOutput.connect(activeInput);
+    activeInput = null;
+    activeOutput = null;
   }
 }
 
@@ -131,6 +175,16 @@ void checkGatesPressed() {
       orGate.move(mouseX, mouseY);
     }
   }
+  for (ExclusiveOrGate xorGate : exclusiveOrGates) {
+    if (xorGate.isClicked()) {
+      xorGate.move(mouseX, mouseY);
+    }
+  }
+  for (NotGate notGate: notGates){
+    if(notGate.isClicked()){
+      notGate.move(mouseX,mouseY);
+    }
+  }
   for (OutputGate outputGate : outputGates) {
     if (outputGate.isClicked()) {
       outputGate.move(mouseX, mouseY);
@@ -144,6 +198,8 @@ void setupControls(){
     dropdownOptions.add("Output");
     dropdownOptions.add("AND");
     dropdownOptions.add("OR");
+    dropdownOptions.add("NOT");
+    dropdownOptions.add("XOR");
     dropdownList = cp5.addScrollableList("dropdown")
      .setPosition(width-240, 40)
      .setSize(200, 200)

@@ -18,6 +18,10 @@ class Node {
     positionX = newX;
     positionY = newY;
   }
+  
+  void unselect(){
+    isSelected = false;
+  }
 
   boolean getState() {
     return state;
@@ -78,10 +82,10 @@ class OutputNode extends Node {
 
   void connect(InputNode inputNode) {
     connectedInput = inputNode;
-    println("connecting");
     line(positionX, positionY, connectedInput.getPositionX(), connectedInput.getPositionY());
     connectedInput.setState(getState());
-    isSelected = false;
+    connectedInput.unselect();
+    unselect();
   }
 
   void disconnect() {
@@ -97,7 +101,7 @@ class OutputNode extends Node {
     }
     ellipse(positionX, positionY, 2*nodeRadius, 2*nodeRadius);
     if (connectedInput != null) {
-      println(connectedInput.getState());
+      connectedInput.setState(getState());
       line(positionX, positionY, connectedInput.getPositionX(), connectedInput.getPositionY());
     }
   }

@@ -23,14 +23,21 @@ class LogicGate {
   }
 
   void move(float positionX, float positionY) {
+    boolean nodesClicked = false;
     for (InputNode inputNode : inputNodes) {
-      if (!inputNode.isClicked() && !outputNode.isClicked()) {
+      if(inputNode.isClicked()||outputNode.isClicked()){
+        nodesClicked = true;
+        break;
+      }
+    }
+    if(!nodesClicked){
+      for (InputNode inputNode : inputNodes) {
         inputNode.move(positionX-50, positionY+inputNode.getOffsetY());
         posX = positionX;
         posY = positionY;
         outputNode.move(positionX+50, positionY);
       }
-    }
+      }
   }
 
   void setBackground(boolean isHighlighted) {
@@ -121,6 +128,37 @@ class OutputGate extends LogicGate {
   }
 }
 
+class NotGate extends LogicGate{
+  
+  NotGate(float positionX,float positionY){
+    super(positionX,positionY,1);
+  }
+  
+  boolean getInputState(){
+    return inputNodes.get(0).getState();
+  }
+  
+  void setInput(boolean state){
+    inputNodes.get(0).setState(state);
+  }
+  
+  void updateOutputState(){
+    setOutputState(!getInputState());
+  }
+  
+  void display() {
+    setBackground(getOutputState());
+    fill(backgroundColor);
+    strokeWeight(3);
+    rect(posX-50, posY-50, 100, 100);
+    fill(0);
+    textAlign(CENTER);
+    text("NOT", posX, posY);
+    inputNodes.get(0).display();
+    outputNode.display();
+  }
+}
+
 class AndGate extends LogicGate {
 
   AndGate(float positionX, float positionY) {
@@ -152,6 +190,7 @@ class AndGate extends LogicGate {
   }
 
   void display() {
+    setBackground(getOutputState());
     fill(backgroundColor);
     strokeWeight(3);
     rect(posX-50, posY-50, 100, 100);
@@ -199,6 +238,7 @@ class OrGate extends LogicGate {
   }
 
   void display() {
+    setBackground(getOutputState());
     fill(backgroundColor);
     strokeWeight(3);
     rect(posX-50, posY-50, 100, 100);
@@ -212,5 +252,53 @@ class OrGate extends LogicGate {
 
   String getInfo() {
     return "Or gate at ("+str(posX)+","+str(posY)+") with output state "+str(outputState);
+  }
+}
+
+class ExclusiveOrGate extends LogicGate{
+  
+  ExclusiveOrGate(float positionX,float positionY){
+    super(positionX,positionY,2);
+  }
+  
+    boolean getInputOneState() {
+    return inputNodes.get(0).getState();
+  }
+
+  boolean getInputTwoState() {
+    return inputNodes.get(1).getState();
+  }
+
+  void setInputOne(boolean state) {
+    inputNodes.get(0).setState(state);
+  }
+
+  void setInputTwo(boolean state) {
+    inputNodes.get(1).setState(state);
+  }
+
+  void updateOutputState() {
+    if ((inputNodes.get(0).getState() && !inputNodes.get(1).getState()) || (!inputNodes.get(0).getState() && inputNodes.get(1).getState())) {
+      setOutputState(true);
+    } else {
+      setOutputState(false);
+    }
+  }
+
+  void display() {
+    setBackground(getOutputState());
+    fill(backgroundColor);
+    strokeWeight(3);
+    rect(posX-50, posY-50, 100, 100);
+    fill(0);
+    textAlign(CENTER);
+    text("XOR", posX, posY);
+    inputNodes.get(0).display();
+    inputNodes.get(1).display();
+    outputNode.display();
+  }
+
+  String getInfo() {
+    return "Exclusive or gate at ("+str(posX)+","+str(posY)+") with output state "+str(outputState);
   }
 }
