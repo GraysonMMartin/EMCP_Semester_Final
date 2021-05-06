@@ -302,3 +302,99 @@ class ExclusiveOrGate extends LogicGate{
     return "Exclusive or gate at ("+str(posX)+","+str(posY)+") with output state "+str(outputState);
   }
 }
+
+class NorGate extends LogicGate{
+  
+   NorGate(float positionX,float positionY){
+    super(positionX,positionY,2);
+  }
+  
+    boolean getInputOneState() {
+    return inputNodes.get(0).getState();
+  }
+
+  boolean getInputTwoState() {
+    return inputNodes.get(1).getState();
+  }
+
+  void setInputOne(boolean state) {
+    inputNodes.get(0).setState(state);
+  }
+
+  void setInputTwo(boolean state) {
+    inputNodes.get(1).setState(state);
+  }
+
+  void updateOutputState() {
+    if (inputNodes.get(0).getState() || inputNodes.get(1).getState()) {
+      setOutputState(false);
+    } else {
+      setOutputState(true);
+    }
+  }
+
+  void display() {
+    setBackground(getOutputState());
+    fill(backgroundColor);
+    strokeWeight(3);
+    rect(posX-50, posY-50, 100, 100);
+    fill(0);
+    textAlign(CENTER);
+    text("NOR", posX, posY);
+    inputNodes.get(0).display();
+    inputNodes.get(1).display();
+    outputNode.display();
+  }
+
+  String getInfo() {
+    return "Nor gate at ("+str(posX)+","+str(posY)+") with output state "+str(outputState);
+  }
+}
+
+class NandGate extends LogicGate{
+  
+  NandGate(float positionX, float positionY) {
+    super(positionX, positionY, 2);
+  }
+
+  boolean getInputOneState() {
+    return inputNodes.get(0).getState();
+  }
+
+  boolean getInputTwoState() {
+    return inputNodes.get(1).getState();
+  }
+
+  void setInputOne(boolean state) {
+    inputNodes.get(0).setState(state);
+  }
+
+  void setInputTwo(boolean state) {
+    inputNodes.get(1).setState(state);
+  }
+
+  void updateOutputState() {
+    if (inputNodes.get(0).getState() && inputNodes.get(1).getState()) {
+      setOutputState(false);
+    } else {
+      setOutputState(true);
+    }
+  }
+
+  void display() {
+    setBackground(getOutputState());
+    fill(backgroundColor);
+    strokeWeight(3);
+    rect(posX-50, posY-50, 100, 100);
+    fill(0);
+    textAlign(CENTER);
+    text("NAND", posX, posY);
+    inputNodes.get(0).display();
+    inputNodes.get(1).display();
+    outputNode.display();
+  }
+
+  String getInfo() {
+    return "And gate at ("+str(posX)+","+str(posY)+") with output state "+str(outputState);
+  }
+}

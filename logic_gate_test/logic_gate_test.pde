@@ -12,6 +12,9 @@ ArrayList<OrGate> orGates = new ArrayList<OrGate>();
 ArrayList<OutputGate> outputGates = new ArrayList<OutputGate>();
 ArrayList<NotGate> notGates = new ArrayList<NotGate>();
 ArrayList<ExclusiveOrGate> exclusiveOrGates = new ArrayList<ExclusiveOrGate>();
+ArrayList<NorGate> norGates = new ArrayList<NorGate>();
+ArrayList<NandGate> nandGates = new ArrayList<NandGate>();
+ArrayList<ArrayList> logicGates = new ArrayList<ArrayList>();
 float currentDropdownSelection;
 boolean record;
 
@@ -22,6 +25,14 @@ void setup() {
   inputGates.add(new InputGate(75,height/2));
   outputGates.add(new OutputGate(width-340,height/2));
   setupControls();
+  logicGates.add(inputGates);
+  logicGates.add(andGates);
+  logicGates.add(orGates);
+  logicGates.add(outputGates);
+  logicGates.add(notGates);
+  logicGates.add(exclusiveOrGates);
+  logicGates.add(norGates);
+  logicGates.add(nandGates);
 }
 
 void draw() {
@@ -60,6 +71,16 @@ void mouseReleased() {
       activeOutput = andGate.outputNode;
     }
   }
+  for(NandGate nandGate : nandGates){
+    for(InputNode inputNode: nandGate.inputNodes){
+      if(inputNode.isClicked()){
+        activeInput = inputNode;
+      }
+    }
+    if(nandGate.outputNode.isClicked()){
+      activeOutput = nandGate.outputNode;
+    }
+  }
   for(OrGate orGate : orGates){
     for(InputNode inputNode: orGate.inputNodes){
       if(inputNode.isClicked()){
@@ -78,6 +99,16 @@ void mouseReleased() {
     }
     if(xorGate.outputNode.isClicked()){
       activeOutput = xorGate.outputNode;
+    }
+  }
+  for(NorGate norGate : norGates){
+    for(InputNode inputNode: norGate.inputNodes){
+      if(inputNode.isClicked()){
+        activeInput = inputNode;
+      }
+    }
+    if(norGate.outputNode.isClicked()){
+      activeOutput = norGate.outputNode;
     }
   }
   for(NotGate notGate : notGates){
@@ -124,6 +155,12 @@ void addGate(float dropdownSelection){
   if(dropdownSelection == 5){
     exclusiveOrGates.add(new ExclusiveOrGate(100,100));
   }
+  if(dropdownSelection == 6){
+    norGates.add(new NorGate(100,100));
+  }
+  if(dropdownSelection == 7){
+    nandGates.add(new NandGate(100,100));
+  }
 }
 void update() {
   if (mousePressed) {
@@ -137,6 +174,10 @@ void update() {
     andGate.updateOutputState();
     andGate.display();
   }
+  for (NandGate nandGate : nandGates) {
+    nandGate.updateOutputState();
+    nandGate.display();
+  }
   for (OrGate orGate : orGates) {
     orGate.updateOutputState();
     orGate.display();
@@ -145,6 +186,10 @@ void update() {
     xorGate.updateOutputState();
     xorGate.display();
   }
+  for (NorGate norGate : norGates) {
+    norGate.updateOutputState();
+    norGate.display();
+  }
   for (NotGate notGate : notGates){
     notGate.updateOutputState();
     notGate.display();
@@ -152,6 +197,7 @@ void update() {
   for (OutputGate outputGate : outputGates) {
     outputGate.display();
   }
+
   if(activeInput != null && activeOutput != null){
     activeOutput.connect(activeInput);
     activeInput = null;
@@ -170,6 +216,11 @@ void checkGatesPressed() {
       andGate.move(mouseX, mouseY);
     }
   }
+  for (NandGate nandGate : nandGates) {
+    if (nandGate.isClicked()) {
+      nandGate.move(mouseX, mouseY);
+    }
+  }
   for (OrGate orGate : orGates) {
     if (orGate.isClicked()) {
       orGate.move(mouseX, mouseY);
@@ -178,6 +229,11 @@ void checkGatesPressed() {
   for (ExclusiveOrGate xorGate : exclusiveOrGates) {
     if (xorGate.isClicked()) {
       xorGate.move(mouseX, mouseY);
+    }
+  }
+  for (NorGate norGate : norGates) {
+    if (norGate.isClicked()) {
+      norGate.move(mouseX, mouseY);
     }
   }
   for (NotGate notGate: notGates){
@@ -200,6 +256,8 @@ void setupControls(){
     dropdownOptions.add("OR");
     dropdownOptions.add("NOT");
     dropdownOptions.add("XOR");
+    dropdownOptions.add("NOR");
+    dropdownOptions.add("NAND");
     dropdownList = cp5.addScrollableList("dropdown")
      .setPosition(width-240, 40)
      .setSize(200, 200)
