@@ -32,10 +32,22 @@ class LogicGate {
     }
     if(!nodesClicked){
       for (InputNode inputNode : inputNodes) {
-        inputNode.move(positionX-50, positionY+inputNode.getOffsetY());
-        posX = positionX;
-        posY = positionY;
-        outputNode.move(positionX+50, positionY);
+        if(positionX < 50){
+          posX = 50;
+        }else if(positionX > width-50){
+          posX = width-50;
+        }else{
+          posX = positionX;
+        }
+        if(positionY < 50){
+          posY = 50;
+        }else if(positionY > height-50){
+          posY = height-50;
+        }else{
+          posY = positionY;
+        }
+        inputNode.move(posX-50, posY+inputNode.getOffsetY());
+        outputNode.move(posX+50, posY);
       }
       }
   }
@@ -45,6 +57,25 @@ class LogicGate {
       backgroundColor = color(#FFF943);
     } else {
       backgroundColor = color(255);
+    }
+  }
+  
+  void drawOutline(){
+    fill(backgroundColor);
+    strokeWeight(3);
+    rect(posX-50, posY-50, 100, 100);
+    fill(255,0,0);
+    rect(posX+25,posY-50,25,20);
+    fill(0);
+    textAlign(CENTER,CENTER);
+    text("X",posX+37.5,posY-40);
+  }
+  
+  void disconnect(){
+    for(InputNode inputNode: inputNodes){
+      if(inputNode.connectedOutput != null){
+        inputNode.disconnect(inputNode.connectedOutput.connection);
+      }
     }
   }
 
@@ -59,6 +90,13 @@ class LogicGate {
       return false;
     }
   }
+  
+  boolean delete(){
+    if(mouseX <=posX+50 && mouseX >=posX+25 && mouseY <=posY-30 && mouseY >= posY-50){
+      return true;
+    }
+    return false;
+  }
 }
 
 class InputGate extends LogicGate {
@@ -71,9 +109,21 @@ class InputGate extends LogicGate {
 
   void move(float positionX, float positionY) {
     if (!outputNode.isClicked() && !buttonPressed) {
-      posX = positionX;
-      posY = positionY;
-      outputNode.move(positionX+50, positionY);
+      if(positionX < 50){
+          posX = 50;
+        }else if(positionX > width-50){
+          posX = width-50;
+        }else{
+          posX = positionX;
+        }
+        if(positionY < 50){
+          posY = 50;
+        }else if(positionY > height-50){
+          posY = height-50;
+        }else{
+          posY = positionY;
+        }
+      outputNode.move(posX+50, posY);
     }
   }
 
@@ -94,15 +144,14 @@ class InputGate extends LogicGate {
 
   void display() {
     setBackground(getOutputState());
-    fill(backgroundColor);
-    strokeWeight(3);
-    rect(posX-50, posY-50, 100, 100);
+    drawOutline();
     if (getOutputState()) {
       fill(0, 255, 0);
     } else {
       fill(255, 0, 0);
     }
     rect(posX-25, posY+20, 50, 20);
+    stroke(0);
     fill(0);
     textAlign(CENTER);
     text("INPUT", posX, posY);
@@ -118,9 +167,8 @@ class OutputGate extends LogicGate {
 
   void display() {
     setBackground(inputNodes.get(0).getState());
-    fill(backgroundColor);
-    strokeWeight(3);
-    rect(posX-50, posY-50, 100, 100);
+    drawOutline();
+    stroke(0);
     fill(0);
     textAlign(CENTER);
     text("OUTPUT", posX, posY);
@@ -148,9 +196,8 @@ class NotGate extends LogicGate{
   
   void display() {
     setBackground(getOutputState());
-    fill(backgroundColor);
-    strokeWeight(3);
-    rect(posX-50, posY-50, 100, 100);
+    drawOutline();
+    stroke(0);
     fill(0);
     textAlign(CENTER);
     text("NOT", posX, posY);
@@ -191,9 +238,8 @@ class AndGate extends LogicGate {
 
   void display() {
     setBackground(getOutputState());
-    fill(backgroundColor);
-    strokeWeight(3);
-    rect(posX-50, posY-50, 100, 100);
+    drawOutline();
+    stroke(0);
     fill(0);
     textAlign(CENTER);
     text("AND", posX, posY);
@@ -239,9 +285,8 @@ class OrGate extends LogicGate {
 
   void display() {
     setBackground(getOutputState());
-    fill(backgroundColor);
-    strokeWeight(3);
-    rect(posX-50, posY-50, 100, 100);
+    drawOutline();
+    stroke(0);
     fill(0);
     textAlign(CENTER);
     text("OR", posX, posY);
@@ -287,9 +332,8 @@ class ExclusiveOrGate extends LogicGate{
 
   void display() {
     setBackground(getOutputState());
-    fill(backgroundColor);
-    strokeWeight(3);
-    rect(posX-50, posY-50, 100, 100);
+    drawOutline();
+    stroke(0);
     fill(0);
     textAlign(CENTER);
     text("XOR", posX, posY);
@@ -335,9 +379,8 @@ class NorGate extends LogicGate{
 
   void display() {
     setBackground(getOutputState());
-    fill(backgroundColor);
-    strokeWeight(3);
-    rect(posX-50, posY-50, 100, 100);
+    drawOutline();
+    stroke(0);
     fill(0);
     textAlign(CENTER);
     text("NOR", posX, posY);
@@ -383,9 +426,8 @@ class NandGate extends LogicGate{
 
   void display() {
     setBackground(getOutputState());
-    fill(backgroundColor);
-    strokeWeight(3);
-    rect(posX-50, posY-50, 100, 100);
+    drawOutline();
+    stroke(0);
     fill(0);
     textAlign(CENTER);
     text("NAND", posX, posY);

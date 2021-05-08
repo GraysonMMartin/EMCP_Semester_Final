@@ -3,6 +3,14 @@ import controlP5.*;
 
 OutputNode activeOutput = null;
 InputNode activeInput = null;
+InputGate activeInputGate = null;
+AndGate activeAnd = null;
+OrGate activeOr = null;
+OutputGate activeOutputGate = null;
+NotGate activeNot = null;
+ExclusiveOrGate activeExclusiveOr = null;
+NorGate activeNor = null;
+NandGate activeNand = null;
 ControlP5 cp5;
 ScrollableList dropdownList;
 Button addGateBtn, pdfBtn;
@@ -48,6 +56,17 @@ void draw() {
 }
 
 void mouseReleased() {
+  boolean inputWasNull,outputWasNull;
+  if(activeInput == null){
+    inputWasNull = true;
+  }else{
+    inputWasNull = false;
+  }
+  if(activeOutput == null){
+    outputWasNull = true;
+  }else{
+    outputWasNull = false;
+  }
   for(InputGate inputGate : inputGates){
     inputGate.switchState();
     if(inputGate.outputNode.isClicked()){
@@ -121,6 +140,20 @@ void mouseReleased() {
       activeOutput = notGate.outputNode;
     }
   }
+  if(!inputWasNull && activeOutput == null){
+    activeInput = null;
+  }
+  if(!outputWasNull && activeInput == null){
+    activeOutput = null;
+  }
+  activeInputGate = null;
+  activeOutputGate = null;
+  activeAnd = null;
+  activeOr = null;
+  activeNot = null;
+  activeExclusiveOr = null;
+  activeNor = null;
+  activeNand = null;
 }
 
 void controlEvent(ControlEvent theControlEvent){
@@ -128,7 +161,6 @@ void controlEvent(ControlEvent theControlEvent){
     currentDropdownSelection = theControlEvent.getValue();
   }
   if(theControlEvent.isFrom(addGateBtn)){
-    println("add gate",currentDropdownSelection);
     addGate(currentDropdownSelection);
   }
   if(theControlEvent.isFrom(pdfBtn)){
@@ -207,43 +239,138 @@ void update() {
 
 void checkGatesPressed() {
   for (InputGate inputGate : inputGates) {
-    if (inputGate.isClicked()) {
-      inputGate.move(mouseX, mouseY);
+    if (inputGate.isClicked() && !otherGatePressed()) {
+      activeInputGate = inputGate;
     }
   }
   for (AndGate andGate : andGates) {
-    if (andGate.isClicked()) {
-      andGate.move(mouseX, mouseY);
+    if (andGate.isClicked() && !otherGatePressed()) {
+      activeAnd = andGate;
     }
   }
   for (NandGate nandGate : nandGates) {
-    if (nandGate.isClicked()) {
-      nandGate.move(mouseX, mouseY);
+    if (nandGate.isClicked() && !otherGatePressed()) {
+      activeNand = nandGate;
     }
   }
   for (OrGate orGate : orGates) {
-    if (orGate.isClicked()) {
-      orGate.move(mouseX, mouseY);
+    if (orGate.isClicked() &&!otherGatePressed()) {
+      activeOr = orGate;
     }
   }
   for (ExclusiveOrGate xorGate : exclusiveOrGates) {
-    if (xorGate.isClicked()) {
-      xorGate.move(mouseX, mouseY);
+    if (xorGate.isClicked() && !otherGatePressed()) {
+      activeExclusiveOr = xorGate;
     }
   }
   for (NorGate norGate : norGates) {
-    if (norGate.isClicked()) {
-      norGate.move(mouseX, mouseY);
+    if (norGate.isClicked() && !otherGatePressed()) {
+      activeNor = norGate;
     }
   }
   for (NotGate notGate: notGates){
-    if(notGate.isClicked()){
-      notGate.move(mouseX,mouseY);
+    if(notGate.isClicked() &&!otherGatePressed()){
+      activeNot = notGate;
     }
   }
   for (OutputGate outputGate : outputGates) {
-    if (outputGate.isClicked()) {
-      outputGate.move(mouseX, mouseY);
+    if (outputGate.isClicked() && !otherGatePressed()) {
+      activeOutputGate = outputGate;
+    }
+  }
+  checkDeleteGate();
+  moveActiveGate();
+}
+
+boolean otherGatePressed(){
+  if(activeInputGate == null && activeOutputGate == null && activeAnd == null && activeOr == null && activeNot == null && activeNor == null && activeNand == null && activeExclusiveOr == null){
+    return false;
+  }else{
+    return true;
+  }
+}
+
+void moveActiveGate(){
+  if(activeInputGate != null){
+    activeInputGate.move(mouseX,mouseY);
+  }
+  if(activeOutputGate != null){
+    activeOutputGate.move(mouseX,mouseY);
+  }
+  if(activeAnd != null){
+    activeAnd.move(mouseX,mouseY);
+  }
+  if(activeOr != null){
+    activeOr.move(mouseX,mouseY);
+  }
+  if(activeNot != null){
+    activeNot.move(mouseX,mouseY);
+  }
+  if(activeNor != null){
+    activeNor.move(mouseX,mouseY);
+  }
+  if(activeNand != null){
+    activeNand.move(mouseX,mouseY);
+  }
+  if(activeExclusiveOr != null){
+    activeExclusiveOr.move(mouseX,mouseY);
+  }
+}
+
+void checkDeleteGate(){
+  if(activeInputGate != null){
+    if(activeInputGate.delete()){
+      inputGates.remove(activeInputGate);
+      activeInputGate = null;
+    }
+  }
+  if(activeOutputGate != null){
+    if(activeOutputGate.delete()){
+      activeOutputGate.disconnect();
+      outputGates.remove(activeOutputGate);
+      activeOutputGate = null;
+    }
+  }
+  if(activeAnd != null){
+    if(activeAnd.delete()){
+      activeAnd.disconnect();
+      andGates.remove(activeAnd);
+      activeAnd = null;
+    }
+  }
+  if(activeOr != null){
+    if(activeOr.delete()){
+      activeOr.disconnect();
+      orGates.remove(activeOr);
+      activeOr = null;
+    }
+  }
+  if(activeNot != null){
+    if(activeNot.delete()){
+      activeNot.disconnect();
+      notGates.remove(activeNot);
+      activeNot = null;
+    }
+  }
+  if(activeNor != null){
+    if(activeNor.delete()){
+      activeNor.disconnect();
+      norGates.remove(activeNor);
+      activeNor = null;
+    }
+  }
+  if(activeNand != null){
+    if(activeNand.delete()){
+      activeNand.disconnect();
+      nandGates.remove(activeNand);
+      activeNand = null;
+    }
+  }
+  if(activeExclusiveOr != null){
+    if(activeExclusiveOr.delete()){
+      activeExclusiveOr.disconnect();
+      exclusiveOrGates.remove(activeExclusiveOr);
+      activeExclusiveOr = null;
     }
   }
 }

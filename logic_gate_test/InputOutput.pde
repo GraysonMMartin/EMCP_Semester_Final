@@ -47,6 +47,8 @@ class Node {
 }
 
 class InputNode extends Node {
+  
+  OutputNode connectedOutput = null;
 
   float offsetY;
   InputNode(float positionX, float positionY, float offsetY) {
@@ -55,12 +57,21 @@ class InputNode extends Node {
   }
 
   void display() {
+    setState(false);
     if (isSelected) {
       fill(255, 0, 0);
     } else {
       fill(0);
     }
     ellipse(positionX, positionY, 2*nodeRadius, 2*nodeRadius);
+  }
+  
+  void setConnectedOutput(OutputNode newOutput){
+    connectedOutput = newOutput;
+  }
+  
+  void disconnect(Wire connection){
+    connection.undraw();
   }
 
   float getOffsetY() {
@@ -74,6 +85,7 @@ class InputNode extends Node {
 
 class OutputNode extends Node {
   InputNode connectedInput;
+  Wire connection;
 
   OutputNode(float positionX, float positionY) {
     super(positionX, positionY);
@@ -82,14 +94,17 @@ class OutputNode extends Node {
 
   void connect(InputNode inputNode) {
     connectedInput = inputNode;
-    line(positionX, positionY, connectedInput.getPositionX(), connectedInput.getPositionY());
+    connectedInput.setConnectedOutput(this);
+    connection = new Wire(positionX,positionY,connectedInput.getPositionX(),connectedInput.getPositionY());
     connectedInput.setState(getState());
     connectedInput.unselect();
     unselect();
   }
 
   void disconnect() {
+    println("disconnecting");
     connectedInput.setState(false);
+    connection.undraw();
     connectedInput = null;
   }
 
@@ -102,7 +117,8 @@ class OutputNode extends Node {
     ellipse(positionX, positionY, 2*nodeRadius, 2*nodeRadius);
     if (connectedInput != null) {
       connectedInput.setState(getState());
-      line(positionX, positionY, connectedInput.getPositionX(), connectedInput.getPositionY());
+      connection.update(positionX,positionY,connectedInput.getPositionX(),connectedInput.getPositionY());
+      connection.display();
     }
   }
 }
