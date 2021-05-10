@@ -22,130 +22,129 @@ ArrayList<NotGate> notGates = new ArrayList<NotGate>();
 ArrayList<ExclusiveOrGate> exclusiveOrGates = new ArrayList<ExclusiveOrGate>();
 ArrayList<NorGate> norGates = new ArrayList<NorGate>();
 ArrayList<NandGate> nandGates = new ArrayList<NandGate>();
-ArrayList<ArrayList> logicGates = new ArrayList<ArrayList>();
 float currentDropdownSelection;
 boolean record;
 
 void setup() {
-  size(1200,850);
+  size(1200, 850);
   background(255);
+  //create ControlP5 object
   cp5 = new ControlP5(this);
-  inputGates.add(new InputGate(75,height/2));
-  outputGates.add(new OutputGate(width-340,height/2));
+  //add an initial input and output gate
+  inputGates.add(new InputGate(75, height/2));
+  outputGates.add(new OutputGate(width-340, height/2));
   setupControls();
-  logicGates.add(inputGates);
-  logicGates.add(andGates);
-  logicGates.add(orGates);
-  logicGates.add(outputGates);
-  logicGates.add(notGates);
-  logicGates.add(exclusiveOrGates);
-  logicGates.add(norGates);
-  logicGates.add(nandGates);
 }
 
 void draw() {
+  //this program is a logic gate simulator
   if (record) {
+    //if recording, save pdf
     beginRecord(PDF, str(month())+"-"+str(day())+"_"+str(hour())+"-"+str(minute())+".pdf");
   }
   background(255);
   update();
   if (record) {
+    //stop recording after saving one pdf
     endRecord();
     record = false;
   }
 }
 
 void mouseReleased() {
-  boolean inputWasNull,outputWasNull;
-  if(activeInput == null){
+  //check if an input or output node was selected to begin with
+  boolean inputWasNull, outputWasNull;
+  if (activeInput == null) {
     inputWasNull = true;
-  }else{
+  } else {
     inputWasNull = false;
   }
-  if(activeOutput == null){
+  if (activeOutput == null) {
     outputWasNull = true;
-  }else{
+  } else {
     outputWasNull = false;
   }
-  for(InputGate inputGate : inputGates){
+  for (InputGate inputGate : inputGates) {
     inputGate.switchState();
-    if(inputGate.outputNode.isClicked()){
+    if (inputGate.outputNode.isClicked()) {
       activeOutput = inputGate.outputNode;
     }
   }
-  for(OutputGate outputGate : outputGates){
-    for(InputNode inputNode: outputGate.inputNodes){
-      if(inputNode.isClicked()){
+  for (OutputGate outputGate : outputGates) {
+    for (InputNode inputNode : outputGate.inputNodes) {
+      if (inputNode.isClicked()) {
         activeInput = inputNode;
       }
     }
   }
-  for(AndGate andGate : andGates){
-    for(InputNode inputNode: andGate.inputNodes){
-      if(inputNode.isClicked()){
+  for (AndGate andGate : andGates) {
+    for (InputNode inputNode : andGate.inputNodes) {
+      if (inputNode.isClicked()) {
         activeInput = inputNode;
       }
     }
-    if(andGate.outputNode.isClicked()){
+    if (andGate.outputNode.isClicked()) {
       activeOutput = andGate.outputNode;
     }
   }
-  for(NandGate nandGate : nandGates){
-    for(InputNode inputNode: nandGate.inputNodes){
-      if(inputNode.isClicked()){
+  for (NandGate nandGate : nandGates) {
+    for (InputNode inputNode : nandGate.inputNodes) {
+      if (inputNode.isClicked()) {
         activeInput = inputNode;
       }
     }
-    if(nandGate.outputNode.isClicked()){
+    if (nandGate.outputNode.isClicked()) {
       activeOutput = nandGate.outputNode;
     }
   }
-  for(OrGate orGate : orGates){
-    for(InputNode inputNode: orGate.inputNodes){
-      if(inputNode.isClicked()){
+  for (OrGate orGate : orGates) {
+    for (InputNode inputNode : orGate.inputNodes) {
+      if (inputNode.isClicked()) {
         activeInput = inputNode;
       }
     }
-    if(orGate.outputNode.isClicked()){
+    if (orGate.outputNode.isClicked()) {
       activeOutput = orGate.outputNode;
     }
   }
-  for(ExclusiveOrGate xorGate : exclusiveOrGates){
-    for(InputNode inputNode: xorGate.inputNodes){
-      if(inputNode.isClicked()){
+  for (ExclusiveOrGate xorGate : exclusiveOrGates) {
+    for (InputNode inputNode : xorGate.inputNodes) {
+      if (inputNode.isClicked()) {
         activeInput = inputNode;
       }
     }
-    if(xorGate.outputNode.isClicked()){
+    if (xorGate.outputNode.isClicked()) {
       activeOutput = xorGate.outputNode;
     }
   }
-  for(NorGate norGate : norGates){
-    for(InputNode inputNode: norGate.inputNodes){
-      if(inputNode.isClicked()){
+  for (NorGate norGate : norGates) {
+    for (InputNode inputNode : norGate.inputNodes) {
+      if (inputNode.isClicked()) {
         activeInput = inputNode;
       }
     }
-    if(norGate.outputNode.isClicked()){
+    if (norGate.outputNode.isClicked()) {
       activeOutput = norGate.outputNode;
     }
   }
-  for(NotGate notGate : notGates){
-    for(InputNode inputNode : notGate.inputNodes){
-      if(inputNode.isClicked()){
+  for (NotGate notGate : notGates) {
+    for (InputNode inputNode : notGate.inputNodes) {
+      if (inputNode.isClicked()) {
         activeInput = inputNode;
       }
     }
-    if(notGate.outputNode.isClicked()){
+    if (notGate.outputNode.isClicked()) {
       activeOutput = notGate.outputNode;
     }
   }
-  if(!inputWasNull && activeOutput == null){
+  //if a node wasn't clicked, unselect selected node
+  if (!inputWasNull && activeOutput == null) {
     activeInput = null;
   }
-  if(!outputWasNull && activeInput == null){
+  if (!outputWasNull && activeInput == null) {
     activeOutput = null;
   }
+  //reset active gates
   activeInputGate = null;
   activeOutputGate = null;
   activeAnd = null;
@@ -156,42 +155,44 @@ void mouseReleased() {
   activeNand = null;
 }
 
-void controlEvent(ControlEvent theControlEvent){
-  if(theControlEvent.isFrom(dropdownList)){
+void controlEvent(ControlEvent theControlEvent) {
+  //handles ControlP5 actions
+  if (theControlEvent.isFrom(dropdownList)) {
     currentDropdownSelection = theControlEvent.getValue();
   }
-  if(theControlEvent.isFrom(addGateBtn)){
+  if (theControlEvent.isFrom(addGateBtn)) {
     addGate(currentDropdownSelection);
   }
-  if(theControlEvent.isFrom(pdfBtn)){
+  if (theControlEvent.isFrom(pdfBtn)) {
     record = true;
   }
 }
 
-void addGate(float dropdownSelection){
-  if(dropdownSelection == 0){
-    inputGates.add(new InputGate(100,100));
+void addGate(float dropdownSelection) {
+  //add the gate coinciding with the position in the scrollable list
+  if (dropdownSelection == 0) {
+    inputGates.add(new InputGate(100, 100));
   }
-  if(dropdownSelection == 1){
-    outputGates.add(new OutputGate(100,100));
+  if (dropdownSelection == 1) {
+    outputGates.add(new OutputGate(100, 100));
   }
-  if(dropdownSelection == 2){
-    andGates.add(new AndGate(100,100));
+  if (dropdownSelection == 2) {
+    andGates.add(new AndGate(100, 100));
   }
-  if(dropdownSelection == 3){
-    orGates.add(new OrGate(100,100));
+  if (dropdownSelection == 3) {
+    orGates.add(new OrGate(100, 100));
   }
-  if(dropdownSelection == 4){
-    notGates.add(new NotGate(100,100));
+  if (dropdownSelection == 4) {
+    notGates.add(new NotGate(100, 100));
   }
-  if(dropdownSelection == 5){
-    exclusiveOrGates.add(new ExclusiveOrGate(100,100));
+  if (dropdownSelection == 5) {
+    exclusiveOrGates.add(new ExclusiveOrGate(100, 100));
   }
-  if(dropdownSelection == 6){
-    norGates.add(new NorGate(100,100));
+  if (dropdownSelection == 6) {
+    norGates.add(new NorGate(100, 100));
   }
-  if(dropdownSelection == 7){
-    nandGates.add(new NandGate(100,100));
+  if (dropdownSelection == 7) {
+    nandGates.add(new NandGate(100, 100));
   }
 }
 void update() {
@@ -222,7 +223,7 @@ void update() {
     norGate.updateOutputState();
     norGate.display();
   }
-  for (NotGate notGate : notGates){
+  for (NotGate notGate : notGates) {
     notGate.updateOutputState();
     notGate.display();
   }
@@ -230,8 +231,10 @@ void update() {
     outputGate.display();
   }
 
-  if(activeInput != null && activeOutput != null){
+  if (activeInput != null && activeOutput != null) {
+    //connect input and output nodes if both are selected
     activeOutput.connect(activeInput);
+    //reset input and output nodes
     activeInput = null;
     activeOutput = null;
   }
@@ -268,8 +271,8 @@ void checkGatesPressed() {
       activeNor = norGate;
     }
   }
-  for (NotGate notGate: notGates){
-    if(notGate.isClicked() &&!otherGatePressed()){
+  for (NotGate notGate : notGates) {
+    if (notGate.isClicked() &&!otherGatePressed()) {
       activeNot = notGate;
     }
   }
@@ -282,92 +285,95 @@ void checkGatesPressed() {
   moveActiveGate();
 }
 
-boolean otherGatePressed(){
-  if(activeInputGate == null && activeOutputGate == null && activeAnd == null && activeOr == null && activeNot == null && activeNor == null && activeNand == null && activeExclusiveOr == null){
+boolean otherGatePressed() {
+  //returns a boolean indicating if another gate is active
+  if (activeInputGate == null && activeOutputGate == null && activeAnd == null && activeOr == null && activeNot == null && activeNor == null && activeNand == null && activeExclusiveOr == null) {
     return false;
-  }else{
+  } else {
     return true;
   }
 }
 
-void moveActiveGate(){
-  if(activeInputGate != null){
-    activeInputGate.move(mouseX,mouseY);
+void moveActiveGate() {
+  //moves the active gate centered at the mouse's position
+  if (activeInputGate != null) {
+    activeInputGate.move(mouseX, mouseY);
   }
-  if(activeOutputGate != null){
-    activeOutputGate.move(mouseX,mouseY);
+  if (activeOutputGate != null) {
+    activeOutputGate.move(mouseX, mouseY);
   }
-  if(activeAnd != null){
-    activeAnd.move(mouseX,mouseY);
+  if (activeAnd != null) {
+    activeAnd.move(mouseX, mouseY);
   }
-  if(activeOr != null){
-    activeOr.move(mouseX,mouseY);
+  if (activeOr != null) {
+    activeOr.move(mouseX, mouseY);
   }
-  if(activeNot != null){
-    activeNot.move(mouseX,mouseY);
+  if (activeNot != null) {
+    activeNot.move(mouseX, mouseY);
   }
-  if(activeNor != null){
-    activeNor.move(mouseX,mouseY);
+  if (activeNor != null) {
+    activeNor.move(mouseX, mouseY);
   }
-  if(activeNand != null){
-    activeNand.move(mouseX,mouseY);
+  if (activeNand != null) {
+    activeNand.move(mouseX, mouseY);
   }
-  if(activeExclusiveOr != null){
-    activeExclusiveOr.move(mouseX,mouseY);
+  if (activeExclusiveOr != null) {
+    activeExclusiveOr.move(mouseX, mouseY);
   }
 }
 
-void checkDeleteGate(){
-  if(activeInputGate != null){
-    if(activeInputGate.delete()){
+void checkDeleteGate() {
+  //checks if the delete button is clicked, disconnects all connections to the gate, and deletes the gate
+  if (activeInputGate != null) {
+    if (activeInputGate.delete()) {
       inputGates.remove(activeInputGate);
       activeInputGate = null;
     }
   }
-  if(activeOutputGate != null){
-    if(activeOutputGate.delete()){
+  if (activeOutputGate != null) {
+    if (activeOutputGate.delete()) {
       activeOutputGate.disconnect();
       outputGates.remove(activeOutputGate);
       activeOutputGate = null;
     }
   }
-  if(activeAnd != null){
-    if(activeAnd.delete()){
+  if (activeAnd != null) {
+    if (activeAnd.delete()) {
       activeAnd.disconnect();
       andGates.remove(activeAnd);
       activeAnd = null;
     }
   }
-  if(activeOr != null){
-    if(activeOr.delete()){
+  if (activeOr != null) {
+    if (activeOr.delete()) {
       activeOr.disconnect();
       orGates.remove(activeOr);
       activeOr = null;
     }
   }
-  if(activeNot != null){
-    if(activeNot.delete()){
+  if (activeNot != null) {
+    if (activeNot.delete()) {
       activeNot.disconnect();
       notGates.remove(activeNot);
       activeNot = null;
     }
   }
-  if(activeNor != null){
-    if(activeNor.delete()){
+  if (activeNor != null) {
+    if (activeNor.delete()) {
       activeNor.disconnect();
       norGates.remove(activeNor);
       activeNor = null;
     }
   }
-  if(activeNand != null){
-    if(activeNand.delete()){
+  if (activeNand != null) {
+    if (activeNand.delete()) {
       activeNand.disconnect();
       nandGates.remove(activeNand);
       activeNand = null;
     }
   }
-  if(activeExclusiveOr != null){
-    if(activeExclusiveOr.delete()){
+  if (activeExclusiveOr != null) {
+    if (activeExclusiveOr.delete()) {
       activeExclusiveOr.disconnect();
       exclusiveOrGates.remove(activeExclusiveOr);
       activeExclusiveOr = null;
@@ -375,37 +381,42 @@ void checkDeleteGate(){
   }
 }
 
-void setupControls(){
-    ArrayList<String> dropdownOptions = new ArrayList<String>();
-    dropdownOptions.add("Input");
-    dropdownOptions.add("Output");
-    dropdownOptions.add("AND");
-    dropdownOptions.add("OR");
-    dropdownOptions.add("NOT");
-    dropdownOptions.add("XOR");
-    dropdownOptions.add("NOR");
-    dropdownOptions.add("NAND");
-    dropdownList = cp5.addScrollableList("dropdown")
-     .setPosition(width-240, 40)
-     .setSize(200, 200)
-     .setBarHeight(40)
-     .setItemHeight(40)
-     .addItems(dropdownOptions)
-     .setValue(0)
-     .setOpen(false)
-     ;
-     
+void setupControls() {
+  //setup ControlP5 controls
+
+  //setup scrollable list to choose gates
+  ArrayList<String> dropdownOptions = new ArrayList<String>();
+  dropdownOptions.add("Input");
+  dropdownOptions.add("Output");
+  dropdownOptions.add("AND");
+  dropdownOptions.add("OR");
+  dropdownOptions.add("NOT");
+  dropdownOptions.add("XOR");
+  dropdownOptions.add("NOR");
+  dropdownOptions.add("NAND");
+  dropdownList = cp5.addScrollableList("dropdown")
+    .setPosition(width-240, 40)
+    .setSize(200, 200)
+    .setBarHeight(40)
+    .setItemHeight(40)
+    .addItems(dropdownOptions)
+    .setValue(0)
+    .setOpen(false)
+    ;
+
   currentDropdownSelection = 0;
-     
+
+  //setup add gate button
   addGateBtn = cp5.addButton("add")
     .setValue(0)
-    .setPosition(width-240,250)
-    .setSize(60,40)
+    .setPosition(width-240, 250)
+    .setSize(60, 40)
     ;
-    
-  pdfBtn = cp5.addButton("savePDF")
+
+  //setup save PDF button
+  pdfBtn = cp5.addButton("Save PDF")
     .setValue(0)
-    .setPosition(width-100,height-100)
-    .setSize(60,40)
+    .setPosition(width-100, height-100)
+    .setSize(60, 40)
     ;
 }
