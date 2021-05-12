@@ -84,7 +84,9 @@ class InputNode extends Node {
 
   void disconnect(Wire connection) {
     //stop drawing the connection
+    println("disconnect in input class");
     connection.undraw();
+    connectedOutput = null;
   }
 
   float getOffsetY() {
@@ -105,6 +107,7 @@ class OutputNode extends Node {
   }
 
   void connect(InputNode inputNode) {
+    println("connect");
     //connect to an input node
     connectedInput = inputNode;
     connectedInput.setConnectedOutput(this);
@@ -118,6 +121,7 @@ class OutputNode extends Node {
   }
 
   void disconnect() {
+    println("disconnect in output class");
     //disconnect from an input node
 
     //reset the input node's state to false
@@ -138,7 +142,7 @@ class OutputNode extends Node {
     ellipse(positionX, positionY, 2*nodeRadius, 2*nodeRadius);
     if (connectedInput != null) {
       //if there is a connected input, draw the connection
-
+      
       //update the connected input's state
       connectedInput.setState(getState());
       //update the node positions for the wire

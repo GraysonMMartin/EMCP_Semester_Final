@@ -64,6 +64,7 @@ void mouseReleased() {
   } else {
     outputWasNull = false;
   }
+  //for each gate, check if an input or output node has been clicked
   for (InputGate inputGate : inputGates) {
     inputGate.switchState();
     if (inputGate.outputNode.isClicked()) {
@@ -158,12 +159,15 @@ void mouseReleased() {
 void controlEvent(ControlEvent theControlEvent) {
   //handles ControlP5 actions
   if (theControlEvent.isFrom(dropdownList)) {
+    //set selection to clicked dropdown selection
     currentDropdownSelection = theControlEvent.getValue();
   }
   if (theControlEvent.isFrom(addGateBtn)) {
+    //add the selected gate when add is clicked
     addGate(currentDropdownSelection);
   }
   if (theControlEvent.isFrom(pdfBtn)) {
+    //save a PDF if Save PDF is clicked
     record = true;
   }
 }
@@ -196,7 +200,9 @@ void addGate(float dropdownSelection) {
   }
 }
 void update() {
+  //updates the states of each logic gate and displays each accordingly
   if (mousePressed) {
+    //if the mouse is pressed, check if gates are being clicked
     checkGatesPressed();
   }
   for (InputGate inputGate : inputGates) {
@@ -241,6 +247,7 @@ void update() {
 }
 
 void checkGatesPressed() {
+  //set the active gate to the gate being clicked on if no other gates are being clicked on
   for (InputGate inputGate : inputGates) {
     if (inputGate.isClicked() && !otherGatePressed()) {
       activeInputGate = inputGate;
@@ -281,7 +288,9 @@ void checkGatesPressed() {
       activeOutputGate = outputGate;
     }
   }
+  //check if the active gate's delete button is pressed
   checkDeleteGate();
+  //move the active gate
   moveActiveGate();
 }
 
@@ -416,7 +425,7 @@ void setupControls() {
   //setup save PDF button
   pdfBtn = cp5.addButton("Save PDF")
     .setValue(0)
-    .setPosition(width-100, height-100)
+    .setPosition(width-100, 250)
     .setSize(60, 40)
     ;
 }

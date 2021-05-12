@@ -11,7 +11,6 @@ class Wire {
     this.xTwo = xTwo;
     this.yTwo = yTwo;
     yOffset = offset;
-    println(yOffset);
   }
 
   void update(float xOne, float yOne, float xTwo, float yTwo) {
@@ -49,12 +48,15 @@ class Wire {
           vertex(xOne-abs((xOne-xTwo+10)), yTwo+60-yOffset);
           vertex(xOne-abs((xOne-xTwo+10)), yTwo);
         }
+      } else {
+        vertex(xOne+10, yOne);
+        vertex(xOne+10, yTwo);
       }
+
       vertex(xTwo, yTwo);
       endShape();
     }
   }
-
   void undraw() {
     drawing = false;
   }
