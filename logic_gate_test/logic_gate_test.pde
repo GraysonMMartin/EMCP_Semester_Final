@@ -64,7 +64,7 @@ void mouseReleased() {
   } else {
     outputWasNull = false;
   }
-  //for each gate, check if an input or output node has been clicked
+  //for each gate, check if an input or output node has been clicked and set the active node accordingly
   for (InputGate inputGate : inputGates) {
     inputGate.switchState();
     if (inputGate.outputNode.isClicked()) {
@@ -173,7 +173,7 @@ void controlEvent(ControlEvent theControlEvent) {
 }
 
 void addGate(float dropdownSelection) {
-  //add the gate coinciding with the position in the scrollable list
+  //add the gate in the top-left corner coinciding with the position in the scrollable list
   if (dropdownSelection == 0) {
     inputGates.add(new InputGate(100, 100));
   }

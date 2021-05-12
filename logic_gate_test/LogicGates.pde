@@ -122,7 +122,7 @@ class LogicGate {
 
 class InputGate extends LogicGate {
   //class representing input gates
-  
+
   boolean buttonPressed = false;
 
   InputGate(float positionX, float positionY) {
@@ -171,7 +171,7 @@ class InputGate extends LogicGate {
 
   void display() {
     //display an input gate
-    
+
     //set background to input gate's t/f state
     setBackground(getOutputState());
     drawOutline();
@@ -198,7 +198,7 @@ class OutputGate extends LogicGate {
 
   void display() {
     //display an output gate
-    
+
     //set the background color according to the input node's t/f state
     setBackground(inputNodes.get(0).getState());
     drawOutline();
@@ -234,16 +234,16 @@ class NotGate extends LogicGate {
 
   void display() {
     //display a not gate
-    
+
     //set the background to the output t/f state
     setBackground(getOutputState());
     drawOutline();
     stroke(0);
     noFill();
-    line(posX-30,posY,posX+-20,posY);
-    triangle(posX-20,posY-20,posX-20,posY+20,posX+10,posY);
-    ellipse(posX+15,posY,10,10);
-    line(posX+20,posY,posX+30,posY);
+    line(posX-30, posY, posX+-20, posY);
+    triangle(posX-20, posY-20, posX-20, posY+20, posX+10, posY);
+    ellipse(posX+15, posY, 10, 10);
+    line(posX+20, posY, posX+30, posY);
     inputNodes.get(0).display();
     outputNode.display();
   }
@@ -287,19 +287,19 @@ class AndGate extends LogicGate {
 
   void display() {
     //display an and gate
-    
+
     //set the gate's background to its output t/f state
     setBackground(getOutputState());
     drawOutline();
     stroke(0);
     noFill();
-    line(posX-30,posY-5,posX-15,posY-5);
-    line(posX-30,posY+5,posX-15,posY+5);
-    line(posX-15,posY-13,posX-15,posY+13);
-    line(posX-15,posY-13,posX+3,posY-13);
-    line(posX-15,posY+13,posX+3,posY+13);
-    arc(posX+3,posY,25,26,PI+HALF_PI,TWO_PI+HALF_PI);
-    line(posX+15.5,posY,posX+30,posY);
+    line(posX-30, posY-5, posX-15, posY-5);
+    line(posX-30, posY+5, posX-15, posY+5);
+    line(posX-15, posY-13, posX-15, posY+13);
+    line(posX-15, posY-13, posX+3, posY-13);
+    line(posX-15, posY+13, posX+3, posY+13);
+    arc(posX+3, posY, 25, 26, PI+HALF_PI, TWO_PI+HALF_PI);
+    line(posX+15.5, posY, posX+30, posY);
     inputNodes.get(0).display();
     inputNodes.get(1).display();
     outputNode.display();
@@ -307,28 +307,34 @@ class AndGate extends LogicGate {
 }
 
 class OrGate extends LogicGate {
+  //class representing an or gate
 
   OrGate(float positionX, float positionY) {
     super(positionX, positionY, 2);
   }
 
   boolean getInputOneState() {
+    //returns the first input's state
     return inputNodes.get(0).getState();
   }
 
   boolean getInputTwoState() {
+    //returns the second input's state
     return inputNodes.get(1).getState();
   }
 
   void setInputOne(boolean state) {
+    //sets the first input's state
     inputNodes.get(0).setState(state);
   }
 
   void setInputTwo(boolean state) {
+    //sets the second input's state
     inputNodes.get(1).setState(state);
   }
 
   void updateOutputState() {
+    //updates the gate's output state following or gate logic
     if (inputNodes.get(0).getState() || inputNodes.get(1).getState()) {
       setOutputState(true);
     } else {
@@ -337,16 +343,19 @@ class OrGate extends LogicGate {
   }
 
   void display() {
+    //displays an or gate
+
+    //set the background color according to the gate's t/f output state
     setBackground(getOutputState());
     drawOutline();
     stroke(0);
     noFill();
-    line(posX-30,posY-5,posX-15,posY-5);
-    line(posX-30,posY+5,posX-15,posY+5);
-    arc(posX-20,posY,10,25,PI+HALF_PI,TWO_PI+HALF_PI);
-    curve(posX-100,posY,posX-20,posY-12.5,posX+15.5,posY,posX+50,posY+50);
-    curve(posX-100,posY,posX-20,posY+12.5,posX+15.5,posY,posX+50,posY-50);
-    line(posX+15.5,posY,posX+30,posY);
+    line(posX-30, posY-5, posX-15, posY-5);
+    line(posX-30, posY+5, posX-15, posY+5);
+    arc(posX-20, posY, 10, 25, PI+HALF_PI, TWO_PI+HALF_PI);
+    curve(posX-100, posY, posX-20, posY-12.5, posX+15.5, posY, posX+50, posY+50);
+    curve(posX-100, posY, posX-20, posY+12.5, posX+15.5, posY, posX+50, posY-50);
+    line(posX+15.5, posY, posX+30, posY);
     inputNodes.get(0).display();
     inputNodes.get(1).display();
     outputNode.display();
@@ -354,28 +363,34 @@ class OrGate extends LogicGate {
 }
 
 class ExclusiveOrGate extends LogicGate {
+  //class representing exclusive or gates
 
   ExclusiveOrGate(float positionX, float positionY) {
     super(positionX, positionY, 2);
   }
 
   boolean getInputOneState() {
+    //returns the first input's state
     return inputNodes.get(0).getState();
   }
 
   boolean getInputTwoState() {
+    //returns the second input's state
     return inputNodes.get(1).getState();
   }
 
   void setInputOne(boolean state) {
+    //sets the first input's state
     inputNodes.get(0).setState(state);
   }
 
   void setInputTwo(boolean state) {
+    //sets the second input's state
     inputNodes.get(1).setState(state);
   }
 
   void updateOutputState() {
+    //updates the gate's output state following exclusive or gate logic
     if ((inputNodes.get(0).getState() && !inputNodes.get(1).getState()) || (!inputNodes.get(0).getState() && inputNodes.get(1).getState())) {
       setOutputState(true);
     } else {
@@ -384,17 +399,20 @@ class ExclusiveOrGate extends LogicGate {
   }
 
   void display() {
+    //displays an exclusive or gate
+
+    //sets the background color according to the output's t/f state
     setBackground(getOutputState());
     drawOutline();
     stroke(0);
     noFill();
-    line(posX-30,posY-5,posX-15,posY-5);
-    line(posX-30,posY+5,posX-15,posY+5);
-    arc(posX-25,posY,10,23,PI+HALF_PI,TWO_PI+HALF_PI);
-    arc(posX-20,posY,10,25,PI+HALF_PI,TWO_PI+HALF_PI);
-    curve(posX-100,posY,posX-20,posY-12.5,posX+15.5,posY,posX+50,posY+50);
-    curve(posX-100,posY,posX-20,posY+12.5,posX+15.5,posY,posX+50,posY-50);
-    line(posX+15.5,posY,posX+30,posY);
+    line(posX-30, posY-5, posX-15, posY-5);
+    line(posX-30, posY+5, posX-15, posY+5);
+    arc(posX-25, posY, 10, 23, PI+HALF_PI, TWO_PI+HALF_PI);
+    arc(posX-20, posY, 10, 25, PI+HALF_PI, TWO_PI+HALF_PI);
+    curve(posX-100, posY, posX-20, posY-12.5, posX+15.5, posY, posX+50, posY+50);
+    curve(posX-100, posY, posX-20, posY+12.5, posX+15.5, posY, posX+50, posY-50);
+    line(posX+15.5, posY, posX+30, posY);
     inputNodes.get(0).display();
     inputNodes.get(1).display();
     outputNode.display();
@@ -402,28 +420,34 @@ class ExclusiveOrGate extends LogicGate {
 }
 
 class NorGate extends LogicGate {
+  //class representing a nor gate
 
   NorGate(float positionX, float positionY) {
     super(positionX, positionY, 2);
   }
 
   boolean getInputOneState() {
+    //returns the first input's state
     return inputNodes.get(0).getState();
   }
 
   boolean getInputTwoState() {
+    //returns the second input's state
     return inputNodes.get(1).getState();
   }
 
   void setInputOne(boolean state) {
+    //sets the first input's state
     inputNodes.get(0).setState(state);
   }
 
   void setInputTwo(boolean state) {
+    //sets the second input's state
     inputNodes.get(1).setState(state);
   }
 
   void updateOutputState() {
+    //updates the output's state according to nor gate logic
     if (inputNodes.get(0).getState() || inputNodes.get(1).getState()) {
       setOutputState(false);
     } else {
@@ -432,17 +456,20 @@ class NorGate extends LogicGate {
   }
 
   void display() {
+    //displays a nor gate
+
+    //set the background according to the output's t/f state
     setBackground(getOutputState());
     drawOutline();
     stroke(0);
     noFill();
-    line(posX-30,posY-5,posX-15,posY-5);
-    line(posX-30,posY+5,posX-15,posY+5);
-    arc(posX-20,posY,10,25,PI+HALF_PI,TWO_PI+HALF_PI);
-    curve(posX-100,posY,posX-20,posY-12.5,posX+15.5,posY,posX+50,posY+50);
-    curve(posX-100,posY,posX-20,posY+12.5,posX+15.5,posY,posX+50,posY-50);
-    ellipse(posX+20.5,posY,10,10);
-    line(posX+25.5,posY,posX+32.5,posY);
+    line(posX-30, posY-5, posX-15, posY-5);
+    line(posX-30, posY+5, posX-15, posY+5);
+    arc(posX-20, posY, 10, 25, PI+HALF_PI, TWO_PI+HALF_PI);
+    curve(posX-100, posY, posX-20, posY-12.5, posX+15.5, posY, posX+50, posY+50);
+    curve(posX-100, posY, posX-20, posY+12.5, posX+15.5, posY, posX+50, posY-50);
+    ellipse(posX+20.5, posY, 10, 10);
+    line(posX+25.5, posY, posX+32.5, posY);
     inputNodes.get(0).display();
     inputNodes.get(1).display();
     outputNode.display();
@@ -450,28 +477,34 @@ class NorGate extends LogicGate {
 }
 
 class NandGate extends LogicGate {
+  //class representing a nand gate
 
   NandGate(float positionX, float positionY) {
     super(positionX, positionY, 2);
   }
 
   boolean getInputOneState() {
+    //returns the first input's state
     return inputNodes.get(0).getState();
   }
 
   boolean getInputTwoState() {
+    //returns the second input's state
     return inputNodes.get(1).getState();
   }
 
   void setInputOne(boolean state) {
+    //sets the first input's state
     inputNodes.get(0).setState(state);
   }
 
   void setInputTwo(boolean state) {
+    //sets the second input's state
     inputNodes.get(1).setState(state);
   }
 
   void updateOutputState() {
+    //update the output's state according to nand gate logic
     if (inputNodes.get(0).getState() && inputNodes.get(1).getState()) {
       setOutputState(false);
     } else {
@@ -480,18 +513,21 @@ class NandGate extends LogicGate {
   }
 
   void display() {
+    //displays a nand gate
+
+    //set the backgound according to the output's t/f state
     setBackground(getOutputState());
     drawOutline();
     stroke(0);
     noFill();
-    line(posX-30,posY-5,posX-15,posY-5);
-    line(posX-30,posY+5,posX-15,posY+5);
-    line(posX-15,posY-13,posX-15,posY+13);
-    line(posX-15,posY-13,posX+3,posY-13);
-    line(posX-15,posY+13,posX+3,posY+13);
-    arc(posX+3,posY,25,26,PI+HALF_PI,TWO_PI+HALF_PI);
-    ellipse(posX+20.5,posY,10,10);
-    line(posX+25.5,posY,posX+32.5,posY);
+    line(posX-30, posY-5, posX-15, posY-5);
+    line(posX-30, posY+5, posX-15, posY+5);
+    line(posX-15, posY-13, posX-15, posY+13);
+    line(posX-15, posY-13, posX+3, posY-13);
+    line(posX-15, posY+13, posX+3, posY+13);
+    arc(posX+3, posY, 25, 26, PI+HALF_PI, TWO_PI+HALF_PI);
+    ellipse(posX+20.5, posY, 10, 10);
+    line(posX+25.5, posY, posX+32.5, posY);
     inputNodes.get(0).display();
     inputNodes.get(1).display();
     outputNode.display();
