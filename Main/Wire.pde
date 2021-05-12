@@ -45,7 +45,7 @@ class Wire {
         }
         if (yTwo > yOne) {
           //if the connected input is below the output
-          if (abs(yTwo-yOne) > 110) {
+          if (abs(yTwo-yOne-yOffset) > 110) {
             //if the wire can be drawn above the connected input's logic gate
             vertex(xOne+10, yOne);
             vertex(xOne+10, yOne+60);
@@ -54,7 +54,8 @@ class Wire {
           } else {
             //if the wire must go around the bottom of the connected input's logic gate
             vertex(xOne+10, yOne);
-            vertex(xOne+10, yTwo+60-yOffset);
+            vertex(xOne+10, yOne+60);
+            vertex(xTwo + 110, yOne+60);
             vertex(xTwo+110, yTwo+60-yOffset);
             vertex(xOne-abs((xOne-xTwo+10)), yTwo+60-yOffset);
             vertex(xOne-abs((xOne-xTwo+10)), yTwo);
